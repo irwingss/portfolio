@@ -37,15 +37,15 @@ const description = "Data scientist and ML/AI engineer building production syste
 
       <section class="evidence-strip reveal" aria-label="Selected outcomes">
         <div>
-          <strong>2 weeks → &lt;3 days</strong>
+          <strong><span class="count" data-to="2">0</span> weeks → &lt;<span class="count" data-to="3">0</span> days</strong>
           <span>Environmental report drafting</span>
         </div>
         <div>
-          <strong>4 months → 3 weeks</strong>
+          <strong><span class="count" data-to="4">0</span> months → <span class="count" data-to="3">0</span> weeks</strong>
           <span>Academic certificate turnaround</span>
         </div>
         <div>
-          <strong>300+ active users</strong>
+          <strong><span class="count" data-to="300">0</span>+ active users</strong>
           <span>Public-health AI assistant</span>
         </div>
       </section>
@@ -54,7 +54,7 @@ const description = "Data scientist and ML/AI engineer building production syste
         <header class="section-header reveal">
           <p class="section-index">01 / Selected work</p>
           <div>
-            <h2 id="work-title">Systems built around<br />real constraints.</h2>
+            <h2 id="work-title">Systems built around real constraints.</h2>
             <p>
               Public product work and closed-source systems presented through the problems,
               decisions, and measurable outcomes they produced.
@@ -101,6 +101,8 @@ const description = "Data scientist and ML/AI engineer building production syste
               result="The assistant reached 300+ active users; the wider system supported population monitoring across Peru."
               tags={["Python", "Power BI", "REDCap", "GIS", "LLM application"]}
               variant="health"
+              href="https://www.minsa.gob.pe/rissalud/plataformapisalud/"
+              linkLabel="Visit the platform"
             />
           </div>
 
@@ -123,7 +125,7 @@ const description = "Data scientist and ML/AI engineer building production syste
         <header class="section-header reveal">
           <p class="section-index">02 / Capabilities</p>
           <div>
-            <h2 id="capabilities-title">From raw evidence<br />to running product.</h2>
+            <h2 id="capabilities-title">From raw evidence to running product.</h2>
             <p>My strongest work sits where domain knowledge, quantitative rigor, and delivery overlap.</p>
           </div>
         </header>
@@ -166,7 +168,7 @@ const description = "Data scientist and ML/AI engineer building production syste
         <header class="section-header reveal">
           <p class="section-index">03 / Experience</p>
           <div>
-            <h2 id="experience-title">A path through science,<br />data, and software.</h2>
+            <h2 id="experience-title">A path through science, data, and software.</h2>
           </div>
         </header>
 
@@ -203,7 +205,7 @@ const description = "Data scientist and ML/AI engineer building production syste
         <header class="section-header reveal">
           <p class="section-index">04 / Research</p>
           <div>
-            <h2 id="research-title">Scientific depth is<br />part of the stack.</h2>
+            <h2 id="research-title">Scientific depth is part of the stack.</h2>
             <p>Peer-reviewed research, technical books, field science, and reproducible methods inform how I build.</p>
           </div>
         </header>
@@ -250,7 +252,7 @@ const description = "Data scientist and ML/AI engineer building production syste
         <p class="section-index reveal">05 / Contact</p>
         <div class="contact-grid">
           <div class="reveal">
-            <h2 id="contact-title">Have a hard problem<br />worth shipping?</h2>
+            <h2 id="contact-title">Have a hard problem worth shipping?</h2>
             <p>
               I am open to Data Scientist, ML Engineer, and AI Engineer roles—remote worldwide
               or relocation with visa sponsorship.
@@ -309,6 +311,40 @@ const description = "Data scientist and ML/AI engineer building production syste
       }, { rootMargin: "-20% 0px -70%", threshold: 0 });
 
       sections.forEach((section) => navObserver.observe(section));
+    }
+
+    // Count up the evidence-strip figures when it scrolls into view.
+    const counters = [...document.querySelectorAll<HTMLElement>(".evidence-strip .count")];
+    if (counters.length) {
+      const run = (el: HTMLElement) => {
+        const to = Number(el.dataset.to ?? "0");
+        if (prefersReducedMotion) {
+          el.textContent = String(to);
+          return;
+        }
+        const duration = 1100;
+        let t0: number | null = null;
+        const step = (ts: number) => {
+          if (t0 === null) t0 = ts;
+          const p = Math.min((ts - t0) / duration, 1);
+          el.textContent = String(Math.round(to * (1 - Math.pow(1 - p, 3))));
+          if (p < 1) requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
+      };
+
+      if ("IntersectionObserver" in window) {
+        const countObserver = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            countObserver.unobserve(entry.target);
+            entry.target.querySelectorAll<HTMLElement>(".count").forEach(run);
+          });
+        }, { threshold: 0.4 });
+        document.querySelectorAll(".evidence-strip").forEach((el) => countObserver.observe(el));
+      } else {
+        counters.forEach(run);
+      }
     }
   </script>
 </BaseLayout>

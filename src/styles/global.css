@@ -23,7 +23,7 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 2rem;
+  scroll-padding-top: 0;
 }
 
 body {
@@ -441,7 +441,7 @@ button {
 }
 
 .evidence-strip strong,
-.evidence-strip span {
+.evidence-strip > div > span {
   display: block;
 }
 
@@ -450,23 +450,31 @@ button {
   font-size: clamp(1.25rem, 2.2vw, 1.8rem);
   font-weight: 500;
   letter-spacing: -0.025em;
+  font-variant-numeric: tabular-nums;
 }
 
-.evidence-strip span {
+.evidence-strip > div > span {
   margin-top: 0.2rem;
   color: var(--ink-soft);
   font-size: 0.7rem;
 }
 
 .section-block {
-  padding-top: clamp(6rem, 12vw, 11rem);
+  padding-top: 0;
 }
 
 .section-header {
   display: grid;
   grid-template-columns: minmax(145px, 0.28fr) minmax(0, 1fr);
   gap: clamp(2rem, 5vw, 6rem);
-  margin-bottom: clamp(3rem, 7vw, 6rem);
+  margin-bottom: 0;
+  /* Full-screen dark band, matching the contact section */
+  min-height: 100vh;
+  align-content: center;
+  margin-inline: calc(-1 * var(--page-gutter));
+  padding: clamp(3rem, 6vw, 5rem) var(--page-gutter);
+  background: var(--ink);
+  color: var(--paper);
 }
 
 .section-index {
@@ -474,21 +482,25 @@ button {
   color: var(--signal);
 }
 
+.section-header .section-index {
+  color: #8bc3bd;
+}
+
 .section-header h2,
 .contact-section h2 {
   max-width: 12ch;
   margin: 0;
   font-family: var(--font-display);
-  font-size: clamp(2.8rem, 6vw, 6.4rem);
+  font-size: clamp(2.8rem, 10vw, 6.0rem);
   font-weight: 400;
-  letter-spacing: -0.055em;
+  letter-spacing: -0.050em;
   line-height: 0.9;
 }
 
 .section-header > div > p {
   max-width: 640px;
   margin: 1.8rem 0 0;
-  color: var(--ink-soft);
+  color: rgba(243, 240, 232, 0.78);
   font-family: var(--font-display);
   font-size: clamp(1.05rem, 1.5vw, 1.35rem);
   line-height: 1.5;
@@ -900,7 +912,7 @@ button {
 }
 
 .contact-section {
-  margin-top: clamp(7rem, 14vw, 14rem);
+  margin-top: 0;
   padding-top: clamp(4rem, 8vw, 8rem);
   background: var(--ink);
   color: var(--paper);
@@ -977,6 +989,54 @@ button {
 
 .contact-section footer p {
   margin: 0;
+}
+
+/* Full-page scroll snapping: each panel fills the viewport and snaps into place */
+.hero,
+.evidence-strip,
+.section-header,
+.work-list > .reveal,
+.capability-grid,
+.timeline,
+.research-layout,
+.contact-section {
+  min-height: 100vh;
+  scroll-snap-align: start;
+}
+
+/* Vertically center each panel's content; `safe` avoids clipping when content is taller than the screen */
+.evidence-strip,
+.capability-grid,
+.research-layout {
+  align-content: safe center;
+}
+
+.timeline,
+.work-list > .reveal {
+  display: flex;
+  flex-direction: column;
+  justify-content: safe center;
+}
+
+/* Desktop full-page scroll: main-content is the scroller at exact viewport height,
+   so each 100vh panel snaps flush with no leftover sliver */
+@media (min-width: 761px) {
+  body {
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .site-shell {
+    height: 100vh;
+  }
+
+  .main-content {
+    height: 100vh;
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+    scroll-padding-top: 0;
+  }
 }
 
 .js .reveal {
@@ -1057,6 +1117,20 @@ button {
 @media (max-width: 760px) {
   html {
     scroll-padding-top: 5rem;
+    scroll-snap-type: none;
+  }
+
+  .hero,
+  .evidence-strip,
+  .section-header,
+  .work-list > .reveal,
+  .capability-grid,
+  .timeline,
+  .research-layout,
+  .contact-section {
+    min-height: 0;
+    scroll-snap-align: none;
+    scroll-snap-stop: normal;
   }
 
   .site-shell {
@@ -1285,7 +1359,16 @@ button {
 
   .section-header {
     display: block;
-    margin-bottom: 0.5cm;
+    margin: 0 0 0.5cm;
+    min-height: 0;
+    padding: 0;
+    background: transparent;
+    color: #111;
+  }
+
+  .section-header .section-index,
+  .section-header > div > p {
+    color: #333;
   }
 
   .section-header h2,
