@@ -313,6 +313,18 @@ const description = "Data scientist and ML/AI engineer building production syste
       sections.forEach((section) => navObserver.observe(section));
     }
 
+    // Smooth scroll for in-page anchors (CSS scroll-behavior is off so the wheel snap stays crisp).
+    document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach((link) => {
+      link.addEventListener("click", (e) => {
+        const target = link.hash === "#top"
+          ? document.body
+          : document.querySelector<HTMLElement>(link.hash);
+        if (!target) return;
+        e.preventDefault();
+        target.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth", block: "start" });
+      });
+    });
+
     // Count up the evidence-strip figures when it scrolls into view.
     const counters = [...document.querySelectorAll<HTMLElement>(".evidence-strip .count")];
     if (counters.length) {
