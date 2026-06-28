@@ -36,6 +36,11 @@ const description = "Data scientist and ML/AI engineer building production syste
       </section>
 
       <section class="evidence-strip reveal" aria-label="Selected outcomes">
+        <p class="evidence-eyebrow">Outcomes shipped</p>
+        <div>
+          <strong><span class="count" data-to="3">0</span> months → open Beta</strong>
+          <span>Ressearch AI · full-stack build, solo developer</span>
+        </div>
         <div>
           <strong><span class="count" data-to="2">0</span> weeks → &lt;<span class="count" data-to="3">0</span> days</strong>
           <span>Environmental report drafting</span>
@@ -249,6 +254,9 @@ const description = "Data scientist and ML/AI engineer building production syste
       </section>
 
       <section class="contact-section" id="contact" aria-labelledby="contact-title">
+        <button class="back-to-top" type="button" aria-label="Back to top">
+          <span>Back to top ↑</span>
+        </button>
         <p class="section-index reveal">05 / Contact</p>
         <div class="contact-grid">
           <div class="reveal">
@@ -313,17 +321,38 @@ const description = "Data scientist and ML/AI engineer building production syste
       sections.forEach((section) => navObserver.observe(section));
     }
 
-    // Smooth scroll for in-page anchors (CSS scroll-behavior is off so the wheel snap stays crisp).
+    // Smooth scroll for in-page anchors. CSS scroll-behavior is off so the wheel snap stays crisp,
+    // and scroll-snap blocks programmatic smooth scrolls — so disable snap for the duration and
+    // restore it once the scroll settles (scrollend), with a timeout fallback.
+    const scroller = document.querySelector<HTMLElement>(".main-content");
+    const smoothScroll = (run: (behavior: ScrollBehavior) => void) => {
+      if (!scroller || prefersReducedMotion) { run("auto"); return; }
+      scroller.style.scrollSnapType = "none";
+      const restore = () => {
+        scroller.style.scrollSnapType = "";
+        scroller.removeEventListener("scrollend", restore);
+      };
+      scroller.addEventListener("scrollend", restore);
+      setTimeout(restore, 1200);
+      run("smooth");
+    };
+
     document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach((link) => {
       link.addEventListener("click", (e) => {
-        const target = link.hash === "#top"
-          ? document.body
-          : document.querySelector<HTMLElement>(link.hash);
+        if (link.hash === "#top") {
+          e.preventDefault();
+          smoothScroll((b) => scroller?.scrollTo({ top: 0, behavior: b }));
+          return;
+        }
+        const target = document.querySelector<HTMLElement>(link.hash);
         if (!target) return;
         e.preventDefault();
-        target.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth", block: "start" });
+        smoothScroll((b) => target.scrollIntoView({ behavior: b, block: "start" }));
       });
     });
+
+    document.querySelector<HTMLButtonElement>(".back-to-top")
+      ?.addEventListener("click", () => smoothScroll((b) => scroller?.scrollTo({ top: 0, behavior: b })));
 
     // Count up the evidence-strip figures when it scrolls into view.
     const counters = [...document.querySelectorAll<HTMLElement>(".evidence-strip .count")];
