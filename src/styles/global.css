@@ -100,50 +100,44 @@ button {
   color: var(--paper);
 }
 
-.brand-mark {
+.profile-photo {
   position: relative;
-  display: grid;
-  width: 88px;
-  height: 88px;
+  display: block;
+  width: clamp(108px, 10vw, 142px);
+  aspect-ratio: 1;
   margin-bottom: 2.6rem;
-  place-items: center;
-  border: 1px solid rgba(255, 255, 255, 0.24);
-  color: var(--paper);
+  border-radius: 50%;
   text-decoration: none;
 }
 
-.brand-mark::after {
+.profile-photo::after {
   position: absolute;
-  top: -5px;
-  right: -5px;
+  top: 4%;
+  right: 4%;
   width: 10px;
   height: 10px;
+  border: 2px solid var(--ink);
   border-radius: 50%;
   background: var(--accent);
   content: "";
 }
 
-.brand-mark svg {
-  position: absolute;
-  inset: 0;
+.profile-photo img {
+  display: block;
   width: 100%;
   height: 100%;
-  opacity: 0.36;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.3;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: 50% 34%;
+  filter: saturate(0.88) contrast(1.03);
 }
 
-.brand-mark svg circle {
-  fill: currentColor;
-  stroke: none;
-}
-
-.brand-monogram {
-  z-index: 1;
-  font-family: var(--font-display);
-  font-size: 1.35rem;
-  font-style: italic;
+.photo-orbit {
+  position: absolute;
+  inset: -8px;
+  border: 1px solid rgba(255, 255, 255, 0.26);
+  border-radius: 50%;
+  pointer-events: none;
 }
 
 .rail-kicker,
@@ -1036,11 +1030,19 @@ button {
     align-items: center;
   }
 
-  .brand-mark {
+  .profile-photo {
     grid-row: 1 / span 3;
     width: 62px;
-    height: 62px;
     margin: 0;
+  }
+
+  .profile-photo::after {
+    width: 8px;
+    height: 8px;
+  }
+
+  .photo-orbit {
+    inset: -5px;
   }
 
   .rail-kicker,
