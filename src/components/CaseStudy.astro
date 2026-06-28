@@ -1,4 +1,7 @@
 ---
+import { existsSync } from "node:fs";
+import { join } from "node:path";
+
 interface Props {
   eyebrow: string;
   title: string;
@@ -6,6 +9,7 @@ interface Props {
   result: string;
   tags: string[];
   variant: "research" | "geo" | "health" | "systems";
+  assetId?: string;
   href?: string;
   linkLabel?: string;
   featured?: boolean;
@@ -19,15 +23,40 @@ const {
   result,
   tags,
   variant,
+  assetId,
   href,
   linkLabel = "View project",
   featured = false,
   privateWork = false
 } = Astro.props;
+
+const defaultAssetId = {
+  research: "01",
+  geo: "02",
+  health: "03",
+  systems: "04"
+}[variant];
+
+const visualId = assetId ?? defaultAssetId;
+const assetFile = `${visualId}.png`;
+const assetPath = join(process.cwd(), "public", "selected-work", assetFile);
+const assetSrc = `${import.meta.env.BASE_URL}selected-work/${assetFile}`;
+const hasAsset = existsSync(assetPath);
 ---
 
 <article class:list={["case-study", { featured }]}>
   <div class:list={["case-visual", `visual-${variant}`]} aria-hidden="true">
+    {hasAsset && (
+      <img
+        class="case-image"
+        src={assetSrc}
+        alt=""
+        width="1200"
+        height="720"
+        loading="lazy"
+        decoding="async"
+      />
+    )}
     {variant === "research" && (
       <svg viewBox="0 0 620 360">
         <defs>
@@ -92,7 +121,7 @@ const {
         </g>
       </svg>
     )}
-    <span class="visual-index">{variant === "research" ? "R/01" : variant === "geo" ? "G/02" : variant === "health" ? "H/03" : "S/04"}</span>
+    <span class="visual-index">{visualId}</span>
   </div>
 
   <div class="case-copy">

@@ -28,5 +28,3 @@ The Astro configuration automatically supports both:
 ## Content policy
 
 Employer projects are described as closed-source case studies. No private source code or internal artifacts belong in this repository.
-
-Local planning notes live under `.private/` and are excluded from Git.

@@ -283,34 +283,39 @@ button {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(180px, 0.28fr);
   gap: clamp(2rem, 6vw, 7rem);
-  align-items: end;
-  min-height: min(880px, 94vh);
-  padding-top: clamp(5rem, 12vh, 9rem);
-  padding-bottom: clamp(4rem, 9vh, 7rem);
+  align-items: start;
+  min-height: min(760px, 82vh);
+  padding-top: clamp(2.5rem, 4.5vh, 5rem);
+  padding-bottom: clamp(3rem, 7vh, 5.5rem);
+  overflow: clip;
 }
 
 .hero::before {
   position: absolute;
   top: 0;
   right: 0;
-  width: min(36vw, 430px);
-  height: min(36vw, 430px);
+  width: min(34vw, 410px);
+  height: min(34vw, 410px);
   border: 1px solid rgba(16, 42, 67, 0.09);
   border-radius: 50%;
   content: "";
-  transform: translate(36%, -42%);
+  transform: translate(48%, -58%);
 }
 
 .hero::after {
   position: absolute;
-  top: 18%;
-  right: 8%;
-  width: 6px;
-  height: 6px;
+  top: 10%;
+  right: 2.5%;
+  width: 5px;
+  height: 5px;
   border-radius: 50%;
   background: var(--accent);
-  box-shadow: -32px 46px 0 rgba(31, 119, 112, 0.65), 54px 82px 0 rgba(16, 42, 67, 0.28);
+  box-shadow: -24px 34px 0 rgba(31, 119, 112, 0.65), 42px 64px 0 rgba(16, 42, 67, 0.28);
   content: "";
+}
+
+.hero-note {
+  align-self: end;
 }
 
 .eyebrow {
@@ -330,6 +335,8 @@ button {
 
 .hero h1 em {
   display: block;
+  font-size: clamp(4rem, 8.2vw, 6.6rem);
+  font-style: normal;
   color: var(--signal);
   font-weight: 400;
 }
@@ -506,27 +513,40 @@ button {
 
 .case-visual {
   position: relative;
-  min-height: 270px;
+  aspect-ratio: 16 / 9;
   overflow: hidden;
   background: var(--ink);
   color: #cfe8e5;
 }
 
 .featured .case-visual {
-  min-height: 380px;
+  min-height: 0;
 }
 
 .case-visual::after {
   position: absolute;
   inset: 0;
   border: 1px solid rgba(255, 255, 255, 0.13);
+  z-index: 2;
   content: "";
   pointer-events: none;
+}
+
+.case-image {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
 }
 
 .case-visual svg {
   position: absolute;
   inset: 0;
+  z-index: 0;
   width: 100%;
   height: 100%;
 }
@@ -535,6 +555,7 @@ button {
   position: absolute;
   right: 1rem;
   bottom: 0.75rem;
+  z-index: 3;
   color: rgba(255, 255, 255, 0.58);
 }
 
@@ -988,11 +1009,6 @@ button {
     grid-template-columns: 1fr;
   }
 
-  .case-visual,
-  .featured .case-visual {
-    min-height: min(52vw, 430px);
-  }
-
   .capability-grid {
     grid-template-columns: 1fr;
   }
@@ -1158,11 +1174,6 @@ button {
   .section-header h2,
   .contact-section h2 {
     font-size: clamp(2.8rem, 14vw, 4.8rem);
-  }
-
-  .case-visual,
-  .featured .case-visual {
-    min-height: 260px;
   }
 
   .timeline-row {
